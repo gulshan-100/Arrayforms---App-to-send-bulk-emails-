@@ -1,0 +1,46 @@
+/* Custom styles for ArrayForms */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+}
+
+.btn-primary {
+  background-color: #4361ee;
+  border-color: #4361ee;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #3a56d4;
+  border-color: #3a56d4;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.alert {
+  border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .card-header {
+    padding: 1rem;
+  }
+}

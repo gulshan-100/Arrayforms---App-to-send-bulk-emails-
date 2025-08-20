@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gmail Setup Help - ArrayForms</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="card shadow">
+      <div class="card-header bg-info text-white">
+        <h2 class="mb-0">How to Set Up Gmail for ArrayForms</h2>
+      </div>
+      <div class="card-body">
+        <h4 class="mb-4">Gmail App Password Setup Guide</h4>
+        
+        <div class="alert alert-warning">
+          <strong>Important:</strong> For security reasons, Gmail doesn't allow regular passwords for third-party apps. You need to create a special "App Password" to use your Gmail account with ArrayForms.
+        </div>
+        
+        <h5 class="mt-4">Prerequisites:</h5>
+        <ul>
+          <li>You must have 2-Step Verification enabled on your Google Account</li>
+          <li>If you haven't set up 2-Step Verification yet, follow <a href="https://www.google.com/landing/2step/" target="_blank">Google's guide to set it up</a> first</li>
+        </ul>
+        
+        <h5 class="mt-4">Step-by-Step Instructions:</h5>
+        <ol class="list-group list-group-numbered mb-4">
+          <li class="list-group-item">Go to your <a href="https://myaccount.google.com/" target="_blank">Google Account</a></li>
+          <li class="list-group-item">In the navigation panel, select <strong>Security</strong></li>
+          <li class="list-group-item">Under "Signing in to Google," select <strong>2-Step Verification</strong></li>
+          <li class="list-group-item">At the bottom of the page, select <strong>App passwords</strong></li>
+          <li class="list-group-item">Enter a name that helps you remember what this app password is for (e.g., "ArrayForms Email Sender")</li>
+          <li class="list-group-item">Select <strong>Create</strong></li>
+          <li class="list-group-item">Google will display a 16-character password. <strong>Copy this password</strong></li>
+          <li class="list-group-item">Return to ArrayForms and paste this password in the "Email Password/App Password" field</li>
+        </ol>
+        
+        <div class="text-center mt-4">
+          <img src="https://support.google.com/accounts/answer/185833?hl=en#zippy=%2Cwhy-you-may-need-an-app-password" class="img-fluid border rounded mb-3" alt="App Password Generation Example" style="max-width: 500px;">
+          <p class="text-muted"><small>Example of Google's App Password generation screen</small></p>
+        </div>
+        
+        <div class="alert alert-info mt-4">
+          <h6>Important Security Notes:</h6>
+          <ul class="mb-0">
+            <li>App passwords are 16 characters long with no spaces</li>
+            <li>You can revoke access at any time from your Google Account</li>
+            <li>ArrayForms does not store your password anywhere</li>
+          </ul>
+        </div>
+        
+        <div class="d-grid gap-2 col-6 mx-auto mt-4">
+          <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Email Form</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
