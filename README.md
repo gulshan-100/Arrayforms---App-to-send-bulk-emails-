@@ -17,6 +17,11 @@ A simple SaaS tool to send bulk emails (up to 10) from the user's own email addr
 - Detailed Gmail app password instructions
 - Connection retry logic for SMTP reliability
 
+## Screenshot
+<img width="857" height="789" alt="Screenshot 2025-08-21 042159" src="https://github.com/user-attachments/assets/daf83334-bd5c-4139-ba69-48947daee586" />
+
+
+
 ## Installation and Setup
 
 1. Clone the repository
