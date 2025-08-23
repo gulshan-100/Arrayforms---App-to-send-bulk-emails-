@@ -1,15 +1,15 @@
 # ArrayForms - App to Send Bulk Emails
 
-A simple SaaS tool to send bulk emails (up to 10) from the user's own email address. Built with Flask, Bootstrap, HTML, CSS, and JavaScript.
+A simple SaaS tool to send bulk cold emails from the user's own email address. Built with Flask, Bootstrap, HTML, CSS, and JavaScript.
 
 ## Features
 
-- Send bulk emails to up to 10 recipients
+- Send bulk emails
 - Each recipient receives an individual email (can't see other recipients)
 - Use your own email address as the sender
 - Simple and intuitive user interface
 - CSRF protection for enhanced security
-- Server-side and client-side validation
+- Server side and client side validation
 - HTML content sanitization to prevent XSS
 - Support for formatted HTML content in emails
 - Progress indicators for bulk sending
@@ -21,13 +21,12 @@ A simple SaaS tool to send bulk emails (up to 10) from the user's own email addr
 <img width="857" height="789" alt="Screenshot 2025-08-21 042159" src="https://github.com/user-attachments/assets/daf83334-bd5c-4139-ba69-48947daee586" />
 
 
-
 ## Installation and Setup
 
 1. Clone the repository
    ```
-   git clone https://github.com/gulshan-100/Arrayforms---App-to-send-bulk-emails-.git
-   cd Arrayforms---App-to-send-bulk-emails-
+   git clone https://github.com/gulshan-100/arrayforms-bulk-mailer
+   cd arrayforms-bulk-mailer
    ```
 
 2. Install dependencies
@@ -40,26 +39,7 @@ A simple SaaS tool to send bulk emails (up to 10) from the user's own email addr
    python app.py
    ```
 
-   Or on Windows, simply run:
-   ```
-   run.bat
-   ```
-
 4. Open your web browser and navigate to `http://127.0.0.1:5000`
-
-## Configuration
-
-For production deployment, the following environment variables can be set:
-
-- `SECRET_KEY`: A strong secret key for Flask session security
-- `SMTP_TIMEOUT`: SMTP connection timeout in seconds (default: 10)
-- `LOG_LEVEL`: Logging level (default: INFO)
-
-Example:
-```
-export SECRET_KEY="your-very-secure-secret-key"
-python app.py
-```
 
 ## Important Notes
 
