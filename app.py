@@ -198,4 +198,7 @@ def get_smtp_settings(email):
         return {'server': f'smtp.{domain}', 'port': 587}
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Get port from environment variable (for Render) or use default
+    port = int(os.environ.get('PORT', 5000))
+    # Use 0.0.0.0 to bind to all available network interfaces
+    app.run(host='0.0.0.0', port=port, debug=False)

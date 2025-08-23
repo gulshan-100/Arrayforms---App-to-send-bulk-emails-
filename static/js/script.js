@@ -1,95 +1,12 @@
-// Modern UI functionality for ArrayForms
+// Simple UI functionality for ArrayForms
 document.addEventListener('DOMContentLoaded', function() {
   // Elements
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('main-content');
-  const toggleBtn = document.getElementById('toggle-sidebar');
-  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-  
   const emailTextarea = document.getElementById('emails');
   const emailCountDisplay = document.getElementById('email_count');
   const form = document.getElementById('emailForm');
   const sendButton = document.getElementById('sendButton');
   const passwordToggle = document.getElementById('togglePassword');
   const passwordInput = document.getElementById('sender_password');
-  
-  // Sidebar toggle functionality
-  if (toggleBtn && sidebar && mainContent) {
-    toggleBtn.addEventListener('click', function() {
-      sidebar.classList.toggle('collapsed');
-      const isCollapsed = sidebar.classList.contains('collapsed');
-      toggleBtn.innerHTML = isCollapsed ? 
-        '<i class="bi bi-chevron-right"></i>' : 
-        '<i class="bi bi-chevron-left"></i>';
-      
-      // Ensure main content width adjusts properly
-      if (isCollapsed) {
-        mainContent.style.marginLeft = 'var(--sidebar-collapsed)';
-        mainContent.style.maxWidth = 'calc(100% - var(--sidebar-collapsed))';
-      } else {
-        mainContent.style.marginLeft = 'var(--sidebar-width)';
-        mainContent.style.maxWidth = 'calc(100% - var(--sidebar-width))';
-      }
-      
-      // Store preference
-      localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
-    });
-    
-    // Check saved preference
-    const savedCollapseState = localStorage.getItem('sidebar-collapsed');
-    if (savedCollapseState === 'true') {
-      sidebar.classList.add('collapsed');
-      toggleBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
-      mainContent.style.marginLeft = 'var(--sidebar-collapsed)';
-      mainContent.style.maxWidth = 'calc(100% - var(--sidebar-collapsed))';
-    }
-  }
-  
-  // Mobile menu
-  if (mobileMenuToggle && sidebar) {
-    const mobileOverlay = document.getElementById('mobile-overlay');
-    
-    mobileMenuToggle.addEventListener('click', function() {
-      sidebar.classList.toggle('mobile-open');
-      
-      // If the sidebar is now open, make sure it's not collapsed
-      if (sidebar.classList.contains('mobile-open')) {
-        sidebar.classList.remove('collapsed');
-        if (toggleBtn) {
-          toggleBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
-        }
-      }
-    });
-    
-    // Close sidebar when clicking on the overlay
-    if (mobileOverlay) {
-      mobileOverlay.addEventListener('click', function() {
-        if (sidebar.classList.contains('mobile-open')) {
-          sidebar.classList.remove('mobile-open');
-        }
-      });
-    }
-    
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(e) {
-      // Only on mobile view
-      if (window.innerWidth <= 768) {
-        // Check if the click was outside the sidebar and the toggle button
-        if (!sidebar.contains(e.target) && e.target !== mobileMenuToggle && 
-            !mobileMenuToggle.contains(e.target) && sidebar.classList.contains('mobile-open')) {
-          sidebar.classList.remove('mobile-open');
-        }
-      }
-    });
-  }
-  
-  // Handle window resize for responsive behavior
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > 768) {
-      // On larger screens, remove mobile open class
-      sidebar.classList.remove('mobile-open');
-    }
-  });
   
   // Tab functionality
   const tabs = document.querySelectorAll('.tab');
@@ -444,75 +361,84 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Get sidebar nav items
-  const navItems = document.querySelectorAll('.nav-item');
-  
-  // Add animation to sidebar nav items
-  navItems.forEach((item, index) => {
-    item.style.animationDelay = (index * 0.1) + 's';
-    item.style.opacity = '0';
-    item.style.transform = 'translateX(-10px)';
-    item.style.animation = 'fadeInLeft 0.3s ease forwards';
-  });
-  
-  // Define the animation
-  const styleSheet = document.styleSheets[0];
-  const animationKeyframes = `
-    @keyframes fadeInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  `;
-  styleSheet.insertRule(animationKeyframes, styleSheet.cssRules.length);
-  
-  // Sidebar navigation functionality
-  navItems.forEach(item => {
-    item.addEventListener('click', function(e) {
-      // For links with hash, handle navigation within the app
-      const href = this.getAttribute('href');
-      if (href && href.startsWith('#')) {
-        e.preventDefault();
-        
-        // Remove active class from all nav items
-        navItems.forEach(navItem => {
-          navItem.classList.remove('active');
+  // Add smooth scrolling for navigation
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
-        
-        // Add active class to clicked item
-        this.classList.add('active');
-        
-        // Handle special cases for navigation
-        if (this.id === 'nav-send-emails') {
-          // Go to the first tab
-          switchToTab('credentials');
-        } else if (this.id === 'nav-recipients') {
-          // Go to the recipients tab
-          switchToTab('recipients');
-        } else if (this.id === 'nav-templates') {
-          // Go to the content tab
-          switchToTab('content');
-        }
-        
-        // Close mobile sidebar if open
-        if (sidebar.classList.contains('mobile-open')) {
-          sidebar.classList.remove('mobile-open');
-        }
       }
     });
   });
   
-  // Check the URL to highlight the active navigation item
-  const currentPath = window.location.pathname;
-  navItems.forEach(item => {
-    const href = item.getAttribute('href');
-    if (href && !href.startsWith('#') && currentPath.includes(href)) {
-      item.classList.add('active');
+  // Add keyboard navigation for tabs
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+      switch(e.key) {
+        case '1':
+          e.preventDefault();
+          switchToTab('credentials');
+          break;
+        case '2':
+          e.preventDefault();
+          switchToTab('recipients');
+          break;
+        case '3':
+          e.preventDefault();
+          switchToTab('content');
+          break;
+      }
     }
   });
+  
+  // Add form auto-save functionality
+  const formInputs = document.querySelectorAll('#emailForm input, #emailForm textarea');
+  formInputs.forEach(input => {
+    input.addEventListener('input', function() {
+      const formData = new FormData(form);
+      const data = {};
+      for (let [key, value] of formData.entries()) {
+        data[key] = value;
+      }
+      localStorage.setItem('arrayforms-draft', JSON.stringify(data));
+    });
+  });
+  
+  // Load saved draft on page load
+  const savedDraft = localStorage.getItem('arrayforms-draft');
+  if (savedDraft) {
+    try {
+      const data = JSON.parse(savedDraft);
+      Object.keys(data).forEach(key => {
+        const input = document.querySelector(`[name="${key}"]`);
+        if (input && data[key]) {
+          input.value = data[key];
+        }
+      });
+      
+      // Update email count if emails were saved
+      if (emailTextarea && emailCountDisplay) {
+        const emails = parseEmails(emailTextarea.value);
+        emailCountDisplay.textContent = emails.length;
+        if (emails.length >= 3) {
+          createRecipientPreview(emails);
+        }
+      }
+    } catch (e) {
+      console.log('Could not load saved draft');
+    }
+  }
+  
+  // Clear draft after successful form submission
+  if (form) {
+    form.addEventListener('submit', function() {
+      localStorage.removeItem('arrayforms-draft');
+    });
+  }
+  
+
 });
