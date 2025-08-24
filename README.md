@@ -14,7 +14,7 @@ A Flask-based bulk email sending application with rich text formatting and file 
 
 1. **Clone and setup**:
    ```bash
-   git clone https://github.com/yourusername/arrayforms-bulk-mailer.git
+   git clone https://github.com/gulshan-100/arrayforms-bulk-mailer.git
    cd arrayforms-bulk-mailer
    python -m venv venv
    venv\Scripts\activate  # Windows
@@ -35,12 +35,3 @@ A Flask-based bulk email sending application with rich text formatting and file 
 2. Generate App Password: Google Account → Security → App passwords
 3. Use the App Password (not your regular password)
 
-## File Limits
-
-- **Size**: 16MB per file
-- **Formats**: PDF, DOC, DOCX, TXT, JPG, PNG, GIF
-- **Recipients**: Max 10 per campaign
-
-## License
-
-MIT License
