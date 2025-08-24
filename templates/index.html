@@ -56,7 +56,7 @@
               {% endif %}
             {% endwith %}
 
-            <form method="POST" action="{{ url_for('index') }}" id="emailForm">
+            <form method="POST" action="{{ url_for('index') }}" id="emailForm" enctype="multipart/form-data">
               {{ form.csrf_token }}
               
               <div class="tab-container">
@@ -180,9 +180,87 @@
                     
                     <div class="form-group full-width">
                       <label for="body" class="form-label">Email Content</label>
-                      <div class="input-group">
-                        {{ form.body(class="form-control", rows="10", placeholder="Write your message here. Basic HTML formatting is supported.", id="body") }}
+                      
+                      <!-- Rich Text Editor Toolbar -->
+                      <div class="rich-text-toolbar mb-2">
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="boldBtn" title="Bold">
+                            <i class="bi bi-type-bold"></i>
+                          </button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="italicBtn" title="Italic">
+                            <i class="bi bi-type-italic"></i>
+                          </button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="underlineBtn" title="Underline">
+                            <i class="bi bi-type-underline"></i>
+                          </button>
+                        </div>
+                        
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="h1Btn" title="Heading 1">H1</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="h2Btn" title="Heading 2">H2</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="h3Btn" title="Heading 3">H3</button>
+                        </div>
+                        
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="ulBtn" title="Bullet List">
+                            <i class="bi bi-list-ul"></i>
+                          </button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="olBtn" title="Numbered List">
+                            <i class="bi bi-list-ol"></i>
+                          </button>
+                        </div>
+                        
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="linkBtn" title="Insert Link">
+                            <i class="bi bi-link-45deg"></i>
+                          </button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="colorBtn" title="Text Color">
+                            <i class="bi bi-palette"></i>
+                          </button>
+                        </div>
+                        
+                        <div class="btn-group" role="group">
+                          <select class="form-select form-select-sm" id="fontFamilyBtn" title="Font Family" style="min-width: 120px;">
+                            <option value="">Default Font</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="Helvetica, sans-serif">Helvetica</option>
+                            <option value="Times New Roman, serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="Courier New, monospace">Courier New</option>
+                            <option value="Tahoma, sans-serif">Tahoma</option>
+                            <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                          </select>
+                        </div>
+                        
+                        <div class="btn-group" role="group">
+                          <select class="form-select form-select-sm" id="fontSizeBtn" title="Font Size" style="min-width: 80px;">
+                            <option value="">Size</option>
+                            <option value="1">8px</option>
+                            <option value="2">10px</option>
+                            <option value="3">12px</option>
+                            <option value="4">14px</option>
+                            <option value="5">18px</option>
+                            <option value="6">24px</option>
+                            <option value="7">36px</option>
+                          </select>
+                        </div>
+                        
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="clearFormatBtn" title="Clear Formatting">
+                            <i class="bi bi-eraser"></i>
+                          </button>
+                        </div>
                       </div>
+                      
+                      <!-- Rich Text Editor -->
+                      <div class="rich-text-editor">
+                        <div class="editor-content" id="richTextEditor" contenteditable="true" data-placeholder="Write your message here. Use the toolbar above for formatting."></div>
+                        {{ form.body(class="form-control d-none", id="body") }}
+                      </div>
+                      
                       {% if form.body.errors %}
                         <div class="validation-feedback invalid-feedback">
                           <i class="bi bi-exclamation-circle"></i>
@@ -192,8 +270,32 @@
                         </div>
                       {% endif %}
                       <div class="form-text">
-                        <i class="bi bi-code me-1"></i> You can use basic HTML tags for formatting
+                        <i class="bi bi-palette me-1"></i> Use the toolbar above for rich text formatting
                       </div>
+                    </div>
+                    
+                    <!-- File Attachments Section -->
+                    <div class="form-group full-width">
+                      <label for="attachments" class="form-label">Attachments</label>
+                      <div class="file-upload-container">
+                        <div class="file-upload-area" id="fileUploadArea">
+                          <div class="file-upload-content">
+                            <i class="bi bi-cloud-upload file-upload-icon"></i>
+                            <h5>Drop files here or click to upload</h5>
+                            <p class="text-muted">Supported: PDF, DOC, DOCX, TXT, JPG, PNG, GIF (Max 16MB total)</p>
+                            {{ form.attachments(class="form-control", id="attachments", multiple="multiple", accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif") }}
+                          </div>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                      </div>
+                      {% if form.attachments.errors %}
+                        <div class="validation-feedback invalid-feedback">
+                          <i class="bi bi-exclamation-circle"></i>
+                          {% for error in form.attachments.errors %}
+                            {{ error }}
+                          {% endfor %}
+                        </div>
+                      {% endif %}
                     </div>
                   </div>
                   

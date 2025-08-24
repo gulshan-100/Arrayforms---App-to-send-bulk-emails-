@@ -1,6 +1,6 @@
 # ArrayForms - Professional Bulk Email Sender
 
-A modern, secure, and user-friendly bulk email sending application built with Flask. Send personalized emails to multiple recipients with a beautiful, responsive interface.
+A modern, secure, and user-friendly bulk email sending application built with Flask. Send personalized emails to multiple recipients with rich text formatting, file attachments, and a beautiful, responsive interface.
 
 ![ArrayForms Interface](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)
@@ -11,45 +11,16 @@ A modern, secure, and user-friendly bulk email sending application built with Fl
 
 - **Secure Email Sending**: Your credentials are never stored on our servers
 - **Personalized Emails**: Each recipient gets an individual email for better privacy
-- **HTML Support**: Rich email formatting with basic HTML tags
+- **Rich Text Editor**: Advanced formatting with bold, italic, underline, headings, lists, and more
+- **Font Customization**: Choose from multiple font families and sizes
+- **File Attachments**: Support for PDF, DOC, DOCX, TXT, JPG, PNG, GIF files
+- **HTML Support**: Rich email formatting with sanitized HTML content
 - **Real-time Progress**: Track sending progress with visual indicators
 - **Mobile Optimized**: Fully responsive design for all devices
 - **Smart Rate Limiting**: Respects email provider limits for optimal deliverability
 - **Modern UI**: Beautiful gradient design with smooth animations
 - **Gmail App Password Support**: Secure authentication for Gmail accounts
-
-## 🚀 Quick Deploy on Render
-
-### Option 1: One-Click Deploy (Recommended)
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy/schema/new?template=https://github.com/yourusername/arrayforms-bulk-mailer)
-
-### Option 2: Manual Deploy
-
-1. **Fork this repository** to your GitHub account
-
-2. **Sign up/Login to Render** at [render.com](https://render.com)
-
-3. **Create a new Web Service**:
-   - Click "New +" → "Web Service"
-   - Connect your GitHub account
-   - Select this repository
-   - Choose the main branch
-
-4. **Configure the service**:
-   - **Name**: `arrayforms-bulk-mailer` (or your preferred name)
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-   - **Plan**: Free (or choose paid for better performance)
-
-5. **Add Environment Variables**:
-   - `SECRET_KEY`: Generate a random secret key (Render can auto-generate this)
-   - `PYTHON_VERSION`: `3.9.16`
-
-6. **Deploy**: Click "Create Web Service"
-
-Your app will be available at: `https://your-app-name.onrender.com`
+- **Drag & Drop**: Easy file upload with drag and drop functionality
 
 ## 🛠️ Local Development
 
@@ -132,6 +103,12 @@ Your app will be available at: `https://your-app-name.onrender.com`
 - **Gmail limits**: 20 emails/hour, 500 emails/day
 - **Other providers**: Varies by provider
 
+### File Upload Limits
+
+- **Maximum file size**: 16MB per file
+- **Supported formats**: PDF, DOC, DOCX, TXT, JPG, JPEG, PNG, GIF
+- **Multiple files**: Upload multiple files at once
+
 ## 🎨 Customization
 
 ### Styling
@@ -148,6 +125,7 @@ The application uses CSS custom properties for easy theming. Edit `static/css/st
 - Add new email providers in `app.py` → `get_smtp_settings()`
 - Modify email validation rules in `EmailForm` class
 - Customize HTML sanitization in `send_emails()` function
+- Extend rich text editor functionality in `static/js/script.js`
 
 ## 🔒 Security Features
 
@@ -156,6 +134,7 @@ The application uses CSS custom properties for easy theming. Edit `static/css/st
 - **Input Validation**: Comprehensive form validation
 - **Rate Limiting**: Respects email provider limits
 - **Secure Headers**: CSRF protection and secure session handling
+- **File Validation**: Secure file upload with type and size restrictions
 
 ## 📱 Browser Support
 
@@ -179,27 +158,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Documentation**: Check the [Gmail Help](https://your-app-name.onrender.com/gmail-help) page
 - **Issues**: Report bugs on GitHub Issues
-- **Email**: Contact support at support@yourdomain.com
-
-## 🚀 Deployment Platforms
-
-This application is optimized for deployment on:
-
-- ✅ **Render** (Recommended)
-- ✅ **Heroku**
-- ✅ **Railway**
-- ✅ **DigitalOcean App Platform**
-- ✅ **Google Cloud Run**
-- ✅ **AWS Elastic Beanstalk**
-
-## 📊 Performance
-
-- **Cold Start**: ~10-15 seconds (free tier)
-- **Response Time**: <500ms (after warm-up)
-- **Memory Usage**: ~50-100MB
-- **Concurrent Users**: 10-50 (free tier)
+- **Documentation**: Check the inline code comments for detailed explanations
 
 ---
 

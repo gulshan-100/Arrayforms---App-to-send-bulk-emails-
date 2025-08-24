@@ -8,11 +8,337 @@ document.addEventListener('DOMContentLoaded', function() {
   const passwordToggle = document.getElementById('togglePassword');
   const passwordInput = document.getElementById('sender_password');
   
+  // Rich Text Editor Elements
+  const richTextEditor = document.getElementById('richTextEditor');
+  const bodyInput = document.getElementById('body');
+  const fileUploadArea = document.getElementById('fileUploadArea');
+  const fileInput = document.getElementById('attachments');
+  const fileList = document.getElementById('fileList');
+  
+  // Rich Text Editor Toolbar Buttons
+  const boldBtn = document.getElementById('boldBtn');
+  const italicBtn = document.getElementById('italicBtn');
+  const underlineBtn = document.getElementById('underlineBtn');
+  const h1Btn = document.getElementById('h1Btn');
+  const h2Btn = document.getElementById('h2Btn');
+  const h3Btn = document.getElementById('h3Btn');
+  const ulBtn = document.getElementById('ulBtn');
+  const olBtn = document.getElementById('olBtn');
+  const linkBtn = document.getElementById('linkBtn');
+  const colorBtn = document.getElementById('colorBtn');
+  const clearFormatBtn = document.getElementById('clearFormatBtn');
+  const fontFamilyBtn = document.getElementById('fontFamilyBtn');
+  const fontSizeBtn = document.getElementById('fontSizeBtn');
+  
   // Tab functionality
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
   const nextTabButtons = document.querySelectorAll('.next-tab');
   const prevTabButtons = document.querySelectorAll('.prev-tab');
+  
+  // Initialize Rich Text Editor
+  if (richTextEditor && bodyInput) {
+    initializeRichTextEditor();
+  }
+  
+  // Initialize File Upload
+  if (fileUploadArea && fileInput) {
+    initializeFileUpload();
+  }
+  
+  function initializeRichTextEditor() {
+    // Sync content between rich text editor and hidden input
+    richTextEditor.addEventListener('input', function() {
+      bodyInput.value = richTextEditor.innerHTML;
+    });
+    
+    // Load initial content if exists
+    if (bodyInput.value) {
+      richTextEditor.innerHTML = bodyInput.value;
+    }
+    
+    // Bold button
+    if (boldBtn) {
+      boldBtn.addEventListener('click', function() {
+        document.execCommand('bold', false, null);
+        updateToolbarState();
+      });
+    }
+    
+    // Italic button
+    if (italicBtn) {
+      italicBtn.addEventListener('click', function() {
+        document.execCommand('italic', false, null);
+        updateToolbarState();
+      });
+    }
+    
+    // Underline button
+    if (underlineBtn) {
+      underlineBtn.addEventListener('click', function() {
+        document.execCommand('underline', false, null);
+        updateToolbarState();
+      });
+    }
+    
+    // Heading buttons
+    if (h1Btn) {
+      h1Btn.addEventListener('click', function() {
+        document.execCommand('formatBlock', false, 'h1');
+        updateToolbarState();
+      });
+    }
+    
+    if (h2Btn) {
+      h2Btn.addEventListener('click', function() {
+        document.execCommand('formatBlock', false, 'h2');
+        updateToolbarState();
+      });
+    }
+    
+    if (h3Btn) {
+      h3Btn.addEventListener('click', function() {
+        document.execCommand('formatBlock', false, 'h3');
+        updateToolbarState();
+      });
+    }
+    
+    // List buttons
+    if (ulBtn) {
+      ulBtn.addEventListener('click', function() {
+        document.execCommand('insertUnorderedList', false, null);
+        updateToolbarState();
+      });
+    }
+    
+    if (olBtn) {
+      olBtn.addEventListener('click', function() {
+        document.execCommand('insertOrderedList', false, null);
+        updateToolbarState();
+      });
+    }
+    
+    // Link button
+    if (linkBtn) {
+      linkBtn.addEventListener('click', function() {
+        const url = prompt('Enter URL:');
+        if (url) {
+          document.execCommand('createLink', false, url);
+        }
+        updateToolbarState();
+      });
+    }
+    
+    // Color button
+    if (colorBtn) {
+      colorBtn.addEventListener('click', function() {
+        showColorPicker();
+      });
+    }
+    
+    // Clear formatting button
+    if (clearFormatBtn) {
+      clearFormatBtn.addEventListener('click', function() {
+        document.execCommand('removeFormat', false, null);
+        updateToolbarState();
+      });
+    }
+    
+    // Font family button
+    if (fontFamilyBtn) {
+      fontFamilyBtn.addEventListener('change', function() {
+        const fontFamily = this.value;
+        if (fontFamily) {
+          document.execCommand('fontName', false, fontFamily);
+        }
+        updateToolbarState();
+      });
+    }
+    
+    // Font size button
+    if (fontSizeBtn) {
+      fontSizeBtn.addEventListener('change', function() {
+        const fontSize = this.value;
+        if (fontSize) {
+          document.execCommand('fontSize', false, fontSize);
+        }
+        updateToolbarState();
+      });
+    }
+    
+    // Update toolbar state on selection change
+    richTextEditor.addEventListener('mouseup', updateToolbarState);
+    richTextEditor.addEventListener('keyup', updateToolbarState);
+  }
+  
+  function updateToolbarState() {
+    // Update button states based on current selection
+    if (boldBtn) {
+      boldBtn.classList.toggle('active', document.queryCommandState('bold'));
+    }
+    if (italicBtn) {
+      italicBtn.classList.toggle('active', document.queryCommandState('italic'));
+    }
+    if (underlineBtn) {
+      underlineBtn.classList.toggle('active', document.queryCommandState('underline'));
+    }
+  }
+  
+  function showColorPicker() {
+    const colors = [
+      '#000000', '#434343', '#666666', '#999999', '#b7b7b7', '#cccccc', '#d9d9d9', '#efefef',
+      '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
+      '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'
+    ];
+    
+    const modal = document.createElement('div');
+    modal.className = 'color-picker-overlay';
+    modal.innerHTML = `
+      <div class="color-picker-modal">
+        <div class="color-picker-header">
+          <h3 class="color-picker-title">Choose Text Color</h3>
+          <button class="color-picker-close" onclick="this.closest('.color-picker-overlay').remove()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="color-grid">
+          ${colors.map(color => `
+            <div class="color-option" style="background-color: ${color}" data-color="${color}"></div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add click handlers for color options
+    modal.querySelectorAll('.color-option').forEach(option => {
+      option.addEventListener('click', function() {
+        const color = this.dataset.color;
+        document.execCommand('foreColor', false, color);
+        modal.remove();
+      });
+    });
+    
+    // Close modal when clicking overlay
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+  }
+  
+  function initializeFileUpload() {
+    // Handle file selection
+    fileInput.addEventListener('change', handleFileSelect);
+    
+    // Handle drag and drop
+    fileUploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      fileUploadArea.classList.add('dragover');
+    });
+    
+    fileUploadArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      fileUploadArea.classList.remove('dragover');
+    });
+    
+    fileUploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      fileUploadArea.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+    
+    // Click to upload
+    fileUploadArea.addEventListener('click', function() {
+      fileInput.click();
+    });
+  }
+  
+  function handleFileSelect(e) {
+    const files = e.target.files;
+    handleFiles(files);
+  }
+  
+  function handleFiles(files) {
+    Array.from(files).forEach(file => {
+      if (isValidFile(file)) {
+        addFileToList(file);
+      } else {
+        showFileError(file.name);
+      }
+    });
+  }
+  
+  function isValidFile(file) {
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif'
+    ];
+    
+    const maxSize = 16 * 1024 * 1024; // 16MB
+    
+    return allowedTypes.includes(file.type) && file.size <= maxSize;
+  }
+  
+  function addFileToList(file) {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    fileItem.innerHTML = `
+      <div class="file-item-info">
+        <i class="bi bi-file-earmark file-icon"></i>
+        <div class="file-details">
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${formatFileSize(file.size)}</div>
+        </div>
+      </div>
+      <button class="file-remove" onclick="this.closest('.file-item').remove()">
+        <i class="bi bi-x"></i>
+      </button>
+    `;
+    
+    fileList.appendChild(fileItem);
+  }
+  
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+  
+  function showFileError(filename) {
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-danger fade show';
+    alert.innerHTML = `
+      <div class="alert-icon">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <div class="alert-content">
+        <div class="alert-title">Invalid File</div>
+        <p>${filename} is not a supported file type or exceeds the 16MB size limit.</p>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Insert alert at the top of the form
+    const firstChild = form.firstChild;
+    form.insertBefore(alert, firstChild);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      alert.remove();
+    }, 5000);
+  }
   
   function switchToTab(tabId) {
     // Hide all tabs
@@ -101,6 +427,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Form submission validation and UI
   if (form && sendButton) {
     form.addEventListener('submit', function(e) {
+      // Sync rich text editor content before submission
+      if (richTextEditor && bodyInput) {
+        bodyInput.value = richTextEditor.innerHTML;
+      }
+      
       // Let the server-side validation handle most errors
       // But we'll still validate the email count client-side for better UX
       const emails = parseEmails(emailTextarea.value);
