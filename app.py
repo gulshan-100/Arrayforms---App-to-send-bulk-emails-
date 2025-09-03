@@ -107,6 +107,87 @@ def index():
 def gmail_help():
     return render_template('gmail_help.html')
 
+def process_links_for_email(html_content):
+    """
+    Process HTML content to make links more email-client friendly
+    """
+    # Pattern to find URLs in href attributes and plain text
+    url_pattern = r'(https?://[^\s<>"\']+)'
+    
+    def replace_url(match):
+        url = match.group(1)
+        # Create a proper HTML link with styling to prevent breaking
+        return f'<a href="{url}" style="word-break: break-all; white-space: nowrap; display: inline-block;">{url}</a>'
+    
+    # First, handle URLs that are not already in href attributes
+    # Look for URLs that are not preceded by href="
+    text_url_pattern = r'(?<!href=")(?<!href=\')(' + url_pattern[1:-1] + r')(?![^<]*</a>)'
+    html_content = re.sub(text_url_pattern, replace_url, html_content)
+    
+    # Add CSS styles to existing links to prevent word breaking
+    html_content = re.sub(
+        r'<a\s+([^>]*href=[^>]*)>',
+        r'<a \1 style="word-break: keep-all; white-space: nowrap; text-decoration: none;">',
+        html_content
+    )
+    
+    return html_content
+
+def create_email_safe_html(body):
+    """
+    Create email-safe HTML content with proper link handling
+    """
+    # First clean the HTML with bleach
+    safe_html_body = bleach.clean(
+        body,
+        tags=['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'img', 'span', 'div', 'b', 'i', 'font'],
+        attributes={
+            'a': ['href', 'target', 'style'], 
+            'img': ['src', 'alt', 'width', 'height'], 
+            'span': ['style'], 
+            'div': ['style'], 
+            'font': ['face', 'size', 'color'],
+            'p': ['style'],
+            'h1': ['style'],
+            'h2': ['style'],
+            'h3': ['style'],
+            'h4': ['style'],
+            'h5': ['style'],
+            'h6': ['style']
+        }
+    )
+    
+    # Process links to make them email-client friendly
+    safe_html_body = process_links_for_email(safe_html_body)
+    
+    # Ensure proper HTML structure for email clients
+    if not safe_html_body.strip().startswith('<'):
+        safe_html_body = f'<p>{safe_html_body}</p>'
+    
+    # Wrap in a proper email HTML structure
+    email_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; }}
+            a {{ color: #0066cc; text-decoration: none; word-break: keep-all; white-space: nowrap; }}
+            a:hover {{ text-decoration: underline; }}
+            .link-container {{ overflow-x: auto; }}
+        </style>
+    </head>
+    <body>
+        <div class="link-container">
+            {safe_html_body}
+        </div>
+    </body>
+    </html>
+    """
+    
+    return email_html
+
 def send_emails(form):
     """Process the email form and send emails to recipients"""
     
@@ -133,15 +214,8 @@ def send_emails(form):
                 })
                 logger.info(f"Attachment saved: {filename}")
     
-    safe_html_body = bleach.clean(
-        body,
-        tags=['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'img', 'span', 'div', 'b', 'i', 'font'],
-        attributes={'a': ['href', 'target'], 'img': ['src', 'alt', 'width', 'height'], 'span': ['style'], 'div': ['style'], 'font': ['face', 'size', 'color']}
-    )
-    
-    # Ensure proper HTML structure for email clients
-    if not safe_html_body.strip().startswith('<'):
-        safe_html_body = f'<p>{safe_html_body}</p>'
+    # Create email-safe HTML content
+    safe_html_body = create_email_safe_html(body)
     
     success_count = 0
     failed_emails = []

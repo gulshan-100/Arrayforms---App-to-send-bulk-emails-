@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fontFamilyBtn.addEventListener('change', function() {
         const fontFamily = this.value;
         if (fontFamily) {
-          document.execCommand('fontName', false, fontFamily);
+          applyFontStyle('fontFamily', fontFamily);
         }
         updateToolbarState();
       });
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fontSizeBtn.addEventListener('change', function() {
         const fontSize = this.value;
         if (fontSize) {
-          document.execCommand('fontSize', false, fontSize);
+          applyFontStyle('fontSize', fontSize + 'px');
         }
         updateToolbarState();
       });
@@ -169,6 +169,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update toolbar state on selection change
     richTextEditor.addEventListener('mouseup', updateToolbarState);
     richTextEditor.addEventListener('keyup', updateToolbarState);
+  }
+  
+  function applyFontStyle(styleProperty, styleValue) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      return;
+    }
+    
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (selectedText) {
+      const span = document.createElement('span');
+      span.style[styleProperty] = styleValue;
+      
+      try {
+        range.deleteContents();
+        span.textContent = selectedText;
+        range.insertNode(span);
+        
+        // Clear selection and update editor content
+        selection.removeAllRanges();
+        bodyInput.value = richTextEditor.innerHTML;
+      } catch (e) {
+        console.error('Error applying font style:', e);
+      }
+    }
   }
   
   function updateToolbarState() {
